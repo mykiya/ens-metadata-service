@@ -1,19 +1,20 @@
-import { Version }                              from '../base';
+import { Version } from '../base';
 import {
+  SERVER_URL,
   CANVAS_FONT_PATH,
   CANVAS_EMOJI_FONT_PATH,
   CANVAS_FALLBACK_FONT_PATH,
-}                                               from '../config';
-import createSVGfromTemplate                    from '../svg-template';
-import base64EncodeUnicode                      from '../utils/base64encode';
-import { isASCII, findCharacterSet }            from '../utils/characterSet';
+} from '../config';
+import createSVGfromTemplate from '../svg-template';
+import base64EncodeUnicode from '../utils/base64encode';
+import { isASCII, findCharacterSet } from '../utils/characterSet';
 import { getCodePointLength, getSegmentLength } from '../utils/charLength';
 
 // no ts decleration files
 
 const { createCanvas, registerFont } = require('canvas');
-const namehash                       = require('@ensdomains/eth-ens-namehash');
-const { validate }                   = require('@ensdomains/ens-validation');
+const namehash = require('@ensdomains/eth-ens-namehash');
+const { validate } = require('@ensdomains/ens-validation');
 
 registerFont(CANVAS_FONT_PATH, { family: 'Satoshi' });
 
@@ -22,28 +23,28 @@ registerFont(CANVAS_EMOJI_FONT_PATH, { family: 'Noto Color Emoji' });
 registerFont(CANVAS_FALLBACK_FONT_PATH, { family: 'DejaVu Sans' });
 
 export interface MetadataInit {
-  name            : string;
-  description?    : string;
-  created_date    : number;
+  name: string;
+  description?: string;
+  created_date: number;
   registered_date?: Date | null;
   expiration_date?: Date | null;
-  tokenId         : string;
-  version         : Version;
+  tokenId: string;
+  version: Version;
 }
 
 export interface Metadata {
-  name             : string;
-  description      : string;
-  attributes       : object[];
-  name_length?     : number;
-  segment_length?  : number;
-  image            : string;
-  image_url?       : string; // same as image, keep for backward compatibility
-  is_normalized    : boolean;
+  name: string;
+  description: string;
+  attributes: object[];
+  name_length?: number;
+  segment_length?: number;
+  image: string;
+  image_url?: string; // same as image, keep for backward compatibility
+  is_normalized: boolean;
   background_image?: string;
-  mimeType?        : string;
-  url?             : string | null;
-  version          : Version;
+  mimeType?: string;
+  url?: string | null;
+  version: Version;
 }
 
 export class Metadata {
@@ -61,13 +62,12 @@ export class Metadata {
     this.name = this.is_normalized
       ? name
       : tokenId.replace(
-          new RegExp('^(.{0,6}).*(.{4})$', 'im'),
-          '[$1...$2].eth'
-        );
+        new RegExp('^(.{0,6}).*(.{4})$', 'im'),
+        '[$1...$2].eth'
+      );
     this.description =
       description ||
-      `${this.name}, an ENS name.${
-        !this.is_normalized ? ` (${name} is not in normalized form)` : ''
+      `${this.name}, an ENS name.${!this.is_normalized ? ` (${name} is not in normalized form)` : ''
       }`;
     if (!is_valid || !isASCII(label)) {
       this.description +=
@@ -98,7 +98,7 @@ https://en.wikipedia.org/wiki/IDN_homograph_attack';
       value: this.segment_length,
     });
     this.url = this.is_normalized
-      ? `https://app.ens.domains/name/${name}`
+      ? `${SERVER_URL}/name/${name}`
       : null;
     this.version = version;
     this.addAttribute({

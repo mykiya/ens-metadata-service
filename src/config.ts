@@ -14,11 +14,13 @@ const INAMEWRAPPER = process.env.INAMEWRAPPER || '0x1aa28a1e';
 const IPFS_GATEWAY = 'https://cloudflare-ipfs.com/';
 const INFURA_API_KEY = process.env.INFURA_API_KEY || '';
 
-const ADDRESS_ETH_REGISTRAR = process.env.ADDRESS_ETH_REGISTRAR || '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85';
-const ADDRESS_ETH_REGISTRY = process.env.ADDRESS_ETH_REGISTRY || '0x00000000000c2e074ec69a0dfb2997ba6c7d2e1e'
-const ADDRESS_NAME_WRAPPER = process.env.ADDRESS_NAME_WRAPPER || '0x4D83cea620E3864F912046b73bB3a6c04Da75990';
+const ADDRESS_ETH_REGISTRAR = process.env.ADDRESS_ETH_REGISTRAR || '0x4F219cc220C12B5f5a7Fa2440D7Cd86fA4a7D942';
+const ADDRESS_ETH_REGISTRY = process.env.ADDRESS_ETH_REGISTRY || '0x3f93B91b028D41580d8d4E53CE722ff0795bAcFB'
+const ADDRESS_NAME_WRAPPER = process.env.ADDRESS_NAME_WRAPPER || '0xc4595733F555C9fcD8Bc3C84A660de5f18EBa3cA';
 
 const SERVER_URL =
+  ENV === 'local' ? `http://localhost:${PORT}` : `https://${HOST}`;
+const METADATA_URL =
   ENV === 'local' ? `http://localhost:${PORT}` : `https://${HOST}`;
 
 const ETH_REGISTRY_ABI = [
@@ -41,4 +43,5 @@ export {
   INFURA_API_KEY,
   RESPONSE_TIMEOUT,
   SERVER_URL,
+  METADATA_URL,
 };

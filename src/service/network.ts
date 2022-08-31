@@ -4,7 +4,8 @@ import { INFURA_API_KEY } from '../config';
 
 const WEB3_API = {
   INFURA: 'https://infura.io/v3/',
-  CLOUDFLARE: 'https://web3metadata.ens.domains/v1'
+  CLOUDFLARE: 'https://web3metadata.ens.domains/v1',
+  METEORA: 'https://meteora-evm.gatenode.cc'
 }
 
 const NETWORK = {
@@ -13,14 +14,17 @@ const NETWORK = {
   ROPSTEN: 'ropsten',
   GOERLI: 'goerli',
   MAINNET: 'mainnet',
+  METEORA: 'meteora',
 };
 
 function getWeb3URL(api: string, network: string) {
-  switch(api) {
+  switch (api) {
     case WEB3_API.INFURA:
       return `${WEB3_API.INFURA.replace('https://', `https://${network}.`)}${INFURA_API_KEY}`;
     case WEB3_API.CLOUDFLARE:
       return `${WEB3_API.CLOUDFLARE}/${network}`
+    case WEB3_API.METEORA:
+      return `${WEB3_API.METEORA}`
     default:
       throw Error('');
   }
@@ -39,21 +43,25 @@ export default function getNetwork(network: string): any {
     case NETWORK.RINKEBY:
       SUBGRAPH_URL =
         'https://api.thegraph.com/subgraphs/name/makoto/ensrinkeby';
-        WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.RINKEBY);
+      WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.RINKEBY);
       break;
     case NETWORK.ROPSTEN:
       SUBGRAPH_URL =
         'https://api.thegraph.com/subgraphs/name/ensdomains/ensropsten';
-        WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.ROPSTEN);
+      WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.ROPSTEN);
       break;
     case NETWORK.GOERLI:
       SUBGRAPH_URL =
         'https://api.thegraph.com/subgraphs/name/ensdomains/ensgoerli';
-        WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.GOERLI);
+      WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.GOERLI);
       break;
     case NETWORK.MAINNET:
       SUBGRAPH_URL = 'https://api.thegraph.com/subgraphs/name/ensdomains/ens';
       WEB3_URL = getWeb3URL(WEB3_URL, NETWORK.MAINNET);
+      break;
+    case NETWORK.METEORA:
+      SUBGRAPH_URL = 'http://139.162.71.94:8000/subgraphs/name/graphprotocol/ens';
+      WEB3_URL = getWeb3URL(WEB3_API.METEORA, NETWORK.METEORA);
       break;
     default:
       throw new UnsupportedNetwork(`Unknown network '${network}'`, 400);

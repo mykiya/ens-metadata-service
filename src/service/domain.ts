@@ -5,6 +5,9 @@ import {
   GET_DOMAINS,
   GET_DOMAINS_BY_LABELHASH,
 } from './subgraph';
+import {
+  METADATA_URL,
+} from '../config';
 import { Metadata } from './metadata';
 import { getAvatarImage } from './avatar';
 import { ExpiredNameError, SubgraphRecordNotFound, Version } from '../base';
@@ -86,43 +89,43 @@ export async function getDomain(
       }
     } else {
       metadata.setBackground(
-        `https://metadata.ens.domains/${networkName}/avatar/${name}`
+        `${METADATA_URL}/${networkName}/avatar/${name}`
       );
       metadata.setImage(
-        `https://metadata.ens.domains/${networkName}/${contractAddress}/${hexId}/image`
+        `${METADATA_URL}/${networkName}/${contractAddress}/${hexId}/image`
       );
     }
   }
 
   async function requestAttributes() {
-    if (parent.id === eth) {
-      const { registrations } = await request(SUBGRAPH_URL, GET_REGISTRATIONS, {
-        labelhash,
-      });
-      const registration = registrations[0];
-      const registered_date = registration.registrationDate * 1000;
-      const expiration_date = registration.expiryDate * 1000;
-      if (expiration_date + GRACE_PERIOD_MS < +new Date()) {
-        throw new ExpiredNameError(
-          `'${name}' is already been expired at ${new Date(
-            expiration_date
-          ).toUTCString()}.`,
-          410
-        );
-      }
-      if (registration) {
-        metadata.addAttribute({
-          trait_type: 'Registration Date',
-          display_type: 'date',
-          value: registered_date,
-        });
-        metadata.addAttribute({
-          trait_type: 'Expiration Date',
-          display_type: 'date',
-          value: expiration_date,
-        });
-      }
+    // if (parent.id === eth) {
+    const { registrations } = await request(SUBGRAPH_URL, GET_REGISTRATIONS, {
+      labelhash,
+    });
+    const registration = registrations[0];
+    const registered_date = registration.registrationDate * 1000;
+    const expiration_date = registration.expiryDate * 1000;
+    if (expiration_date + GRACE_PERIOD_MS < +new Date()) {
+      throw new ExpiredNameError(
+        `'${name}' is already been expired at ${new Date(
+          expiration_date
+        ).toUTCString()}.`,
+        410
+      );
     }
+    if (registration) {
+      metadata.addAttribute({
+        trait_type: 'Registration Date',
+        display_type: 'date',
+        value: registered_date,
+      });
+      metadata.addAttribute({
+        trait_type: 'Expiration Date',
+        display_type: 'date',
+        value: expiration_date,
+      });
+    }
+    // }
   }
   await Promise.all([requestMedia(), requestAttributes()]);
   return metadata;
