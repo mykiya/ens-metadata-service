@@ -21,7 +21,7 @@ const ADDRESS_NAME_WRAPPER = process.env.ADDRESS_NAME_WRAPPER || '0xc4595733F555
 const SERVER_URL =
   ENV === 'local' ? `http://localhost:${PORT}` : `https://${HOST}`;
 const METADATA_URL =
-  ENV === 'local' ? `http://localhost:${PORT}` : `https://${HOST}`;
+  ENV === 'local' ? `http://139.162.71.94:8088` : `https://${HOST}`;
 
 const ETH_REGISTRY_ABI = [
   'function recordExists(bytes32 node) external view returns (bool)'

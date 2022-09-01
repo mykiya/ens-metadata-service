@@ -38,9 +38,9 @@ export async function getDomain(
     hexId = tokenId;
   }
   const queryDocument: any =
-    version !== Version.v2 ? GET_DOMAINS_BY_LABELHASH : GET_DOMAINS;
+    version === Version.v2 ? GET_DOMAINS_BY_LABELHASH : GET_DOMAINS;
   const result = await request(SUBGRAPH_URL, queryDocument, { tokenId: hexId });
-  const domain = version !== Version.v2 ? result.domains[0] : result.domain;
+  const domain = version === Version.v2 ? result.domains[0] : result.domain;
   if (!(domain && Object.keys(domain).length))
     throw new SubgraphRecordNotFound(`No record for ${hexId}`);
   const { name, labelhash, createdAt, parent, resolver } = domain;
